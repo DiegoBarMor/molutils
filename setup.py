@@ -16,8 +16,13 @@ setup(
     url="https://github.com/diegobarmor/molutils",
     license="MIT",
     packages=find_packages(),
-    install_requires=[],
-    entry_points={ # comment out if package is intended to be used only via imports
+    package_data={
+        "molutils": [
+            "_ui/fy_rules.fyr", "_ui/fy_help.fyh",
+        ],
+    }
+    install_requires=["freyacli==0.2.0"],
+    entry_points={
         "console_scripts": [
             "molutils=molutils.__main__:main",
         ],

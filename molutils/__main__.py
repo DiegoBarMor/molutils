@@ -1,9 +1,15 @@
 import sys
 from pathlib import Path
 
-# ------------------------------------------------------------------------------
+try:
+    import molutils as mu
+except ImportError:
+    sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+    import molutils as mu
+
+# ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 def main():
-    ...
+    mu.App(sys.argv).run()
 
 
 ################################################################################
