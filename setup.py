@@ -20,7 +20,7 @@ setup(
         "molutils": [
             "_ui/fy_rules.fyr", "_ui/fy_help.fyh",
         ],
-    }
+    },
     install_requires=["freyacli==0.2.0"],
     entry_points={
         "console_scripts": [

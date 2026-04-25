@@ -4,6 +4,17 @@
     !fyh:_ Provides counts for different aspects of biomolecular structures.
     @models
         !fyh:_ Counts the number of models in a PDB file.
-        !fyh:path_in Path of a PDB file.
+        !fyh:path_pdb Path of a PDB file.
+    !@
+!@
+
+@extract
+    !fyh:_ Extract specific sections of data from biomolecular structures.
+    @models
+        !fyh:_ Extracts the models in a PDB file into separate files.
+        !fyh:path_pdb Path of a PDB file.
+        !fyh:folder_out Path of the directory where to place the unpacked models.
+            If not provided, the parent directory of the input PDB file will be used.
+        !fyh:first_only Use this flag for extracting only the first model of the structure and disregard the rest.
     !@
 !@

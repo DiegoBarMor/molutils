@@ -1,4 +1,4 @@
 # Changelog
 
-## [0.1.0] - 20xx-xx-xx
+## [0.1.0] - 2025-04-25
 - Initial upload to PyPI
