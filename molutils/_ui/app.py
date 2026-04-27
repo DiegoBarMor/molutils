@@ -82,10 +82,29 @@ class App(fy.App):
                 path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
                 path_out.write_text(model)
 
+        def extract_chains():
+            path_in = self.get_arg_path("path_in")
+            self.assert_file_in(path_in)
+
+            folder_out = self.get_arg_path("folder_out", default = path_in.parent)
+            self.assert_dir_out(folder_out)
+
+            data_pdb = path_in.read_text()
+
+            chains = mu.Extract.split_chains(data_pdb)
+
+            chain_ids = mu.List.chains(path_in, first_only = True) \
+                if self.get_arg_bool("first_only") else chains.keys()
+
+            for chain_id in chain_ids:
+                path_out = folder_out / f"{path_in.stem}.{chain_id}.pdb"
+                path_out.write_text(chains[chain_id])
+
 
         command = self.subcommands.pop(0)
 
         if command == "models": return extract_models()
+        if command == "chains": return extract_chains()
 
         raise ValueError(f"Unknown command: {command}")
 

@@ -21,10 +21,13 @@
     !fyh:_ Extract specific sections of data from biomolecular structures.
     @models
         !fyh:_ Extracts the models in a PDB file into separate files.
-        !fyh:path_in Path of a PDB file.
-        !fyh:folder_out Path of the directory where to place the unpacked models.
-            If not provided, the parent directory of the input PDB file will be used.
+        !use:_extract
         !fyh:first_only Use this flag for extracting only the first model of the structure and disregard the rest.
+    !@
+    @chains
+        !fyh:_ Extracts the chains in a PDB file into separate files.
+        !use:_extract
+        !fyh:first_only Use this flag for extracting only the first chain of the structure and disregard the rest.
     !@
 !@
 
@@ -34,3 +37,9 @@
     !fyh:path_in Path of the structure file whose atoms will be selected. Can be anything supported by MDanalysis.
     !fyh:path_out Path for the output selected atoms. Can be anything supported by MDanalysis.
 !@
+
+!def _extract
+    !fyh:path_in Path of a PDB file.
+    !fyh:folder_out Path of the directory where to place the unpacked structures.
+        If not provided, the parent directory of the input PDB file will be used.
+!fed

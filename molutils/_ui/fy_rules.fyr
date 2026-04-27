@@ -12,11 +12,8 @@
 !@
 
 @extract
-    @models
-        path_in[]1.PATH
-        ~folder_out[]1.PATH
-        ~first_only[f,first-only]
-    !@
+    @models !use:_extract !@
+    @chains !use:_extract !@
 !@
 
 @select
@@ -24,3 +21,9 @@
     path_in[]1.PATH
     path_out[]1.PATH
 !@
+
+!def _extract
+    path_in[]1.PATH
+    ~folder_out[]1.PATH
+    ~first_only[f,first-only]
+!fed

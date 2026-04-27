@@ -7,7 +7,7 @@ exec(Path("molutils/_version.py").read_text())
 setup(
     name="molutils",
     version=__version__,
-    description="",
+    description="Collection of tools for preprocessing or summarizing details from biomolecular structure files.",
     keywords="",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
@@ -21,7 +21,7 @@ setup(
             "_ui/fy_rules.fyr", "_ui/fy_help.fyh",
         ],
     },
-    install_requires=["freyacli==0.2.0"],
+    install_requires=["freyacli==0.3.1"],
     entry_points={
         "console_scripts": [
             "molutils=molutils.__main__:main",

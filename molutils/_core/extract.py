@@ -1,3 +1,7 @@
+from collections import defaultdict
+
+import molutils as mu
+
 # //////////////////////////////////////////////////////////////////////////////
 class Extract:
     # --------------------------------------------------------------------------
@@ -21,6 +25,20 @@ class Extract:
             yield model
             if idx == -1: break
             data = data[idx:]
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def split_chains(cls, data: str) -> dict[str, str]:
+        pdb = mu.ParserPDB(data)
+        chains = defaultdict(list)
+        for line in pdb.iter_atoms():
+            chain_id = mu.ParserPDB.get_chainid(line)
+            chains[chain_id].append(line)
+        return {
+            chain_id: mu.ParserPDB.join_lines(lines)
+            for chain_id, lines in chains.items()
+        }
 
 
 # //////////////////////////////////////////////////////////////////////////////
