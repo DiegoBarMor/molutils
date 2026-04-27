@@ -24,9 +24,25 @@ class App(fy.App):
     # --------------------------------------------------------------------------
     def run(self):
         command = self.subcommands.pop(0)
+        if command == "list"   : return self._run_list()
         if command == "count"  : return self._run_count()
         if command == "extract": return self._run_extract()
         if command == "select" : return self._run_select()
+        raise ValueError(f"Unknown command: {command}")
+
+
+    # --------------------------------------------------------------------------
+    def _run_list(self):
+        def list_chains():
+            path_in = self.get_arg_path("path_in")
+            first_only = self.get_arg_bool("first_only")
+            self.assert_file_in(path_in)
+            print(*mu.List.chains(path_in, first_only))
+
+        command = self.subcommands.pop(0)
+
+        if command == "chains": return list_chains()
+
         raise ValueError(f"Unknown command: {command}")
 
 

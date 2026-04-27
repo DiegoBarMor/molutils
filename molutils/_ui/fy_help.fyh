@@ -1,5 +1,14 @@
 !fyh:_ molutils is a collection of tools for preprocessing or summarizing details from biomolecular structure files.
 
+@list
+    !fyh:_ Lists the unique values for different aspects of biomolecular structures.
+    @chains
+        !fyh:_ Lists the chains in a PDB file.
+        !fyh:path_in Path of a PDB file.
+        !fyh:first_only Use this flag for displaying only the first chain of the structure.
+    !@
+!@
+
 @count
     !fyh:_ Provides counts for different aspects of biomolecular structures.
     @models
