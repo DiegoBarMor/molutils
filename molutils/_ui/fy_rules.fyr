@@ -1,12 +1,17 @@
 @count
     @models
-        path_pdb[]1.PATH
+        path_in[]1.PATH
     !@
 !@
 @extract
     @models
-        path_pdb[]1.PATH
+        path_in[]1.PATH
         ~folder_out[]1.PATH
         ~first_only[f,first-only]
     !@
+!@
+@select
+    query[]1.STR
+    path_in[]1.PATH
+    path_out[]1.PATH
 !@

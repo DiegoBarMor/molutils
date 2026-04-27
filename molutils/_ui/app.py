@@ -24,17 +24,18 @@ class App(fy.App):
     # --------------------------------------------------------------------------
     def run(self):
         command = self.subcommands.pop(0)
-        if command == "count": return self._run_count()
+        if command == "count"  : return self._run_count()
         if command == "extract": return self._run_extract()
+        if command == "select" : return self._run_select()
         raise ValueError(f"Unknown command: {command}")
 
 
     # --------------------------------------------------------------------------
     def _run_count(self):
         def count_models():
-            path_pdb = self.get_arg_path("path_pdb")
-            self.assert_file_in(path_pdb)
-            print(mu.Count.models(path_pdb))
+            path_in = self.get_arg_path("path_in")
+            self.assert_file_in(path_in)
+            print(mu.Count.models(path_in))
 
 
         command = self.subcommands.pop(0)
@@ -47,22 +48,22 @@ class App(fy.App):
     # --------------------------------------------------------------------------
     def _run_extract(self):
         def extract_models():
-            path_pdb = self.get_arg_path("path_pdb")
-            self.assert_file_in(path_pdb)
+            path_in = self.get_arg_path("path_in")
+            self.assert_file_in(path_in)
 
-            folder_out = self.get_arg_path("folder_out", default = path_pdb.parent)
+            folder_out = self.get_arg_path("folder_out", default = path_in.parent)
             self.assert_dir_out(folder_out)
 
-            data_pdb = path_pdb.read_text()
+            data_pdb = path_in.read_text()
 
             if self.get_arg_bool("first_only"):
                 _, model = mu.Extract.next_model(data_pdb)
-                path_out = folder_out / f"{path_pdb.stem}.m0.pdb"
+                path_out = folder_out / f"{path_in.stem}.m0.pdb"
                 path_out.write_text(model)
                 return
 
             for i, model in enumerate(mu.Extract.iter_models(data_pdb)):
-                path_out = folder_out / f"{path_pdb.stem}.m{i:03}.pdb"
+                path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
                 path_out.write_text(model)
 
 
@@ -71,6 +72,17 @@ class App(fy.App):
         if command == "models": return extract_models()
 
         raise ValueError(f"Unknown command: {command}")
+
+
+    # --------------------------------------------------------------------------
+    def _run_select(self):
+        query = self.get_arg_str("query")
+        path_in = self.get_arg_path("path_in")
+        path_out = self.get_arg_path("path_out")
+        self.assert_file_in(path_in)
+
+        import MDAnalysis as mda
+        mda.Universe(path_in).select_atoms(query).write(path_out)
 
 
 # //////////////////////////////////////////////////////////////////////////////
