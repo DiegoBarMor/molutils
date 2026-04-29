@@ -13,4 +13,16 @@ class List:
         return sorted(set(gen_chain_ids))
 
 
+    # --------------------------------------------------------------------------
+    @classmethod
+    def resids(cls, path_pdb: Path) -> list[str]:
+        """Returns list of unique residue identifiers in the format "chainid.resid"."""
+        pdb = mu.ParserPDB.from_file(path_pdb)
+        gen_resids = (
+            f"{mu.ParserPDB.get_chainid(line)}.{mu.ParserPDB.get_resid(line)}"
+            for line in pdb.iter_atoms()
+        )
+        return sorted(set(gen_resids))
+
+
 # //////////////////////////////////////////////////////////////////////////////

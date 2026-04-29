@@ -39,9 +39,15 @@ class App(fy.App):
             self.assert_file_in(path_in)
             print(*mu.List.chains(path_in, first_only))
 
+        def list_resids():
+            path_in = self.get_arg_path("path_in")
+            self.assert_file_in(path_in)
+            print(*mu.List.resids(path_in))
+
         command = self.subcommands.pop(0)
 
         if command == "chains": return list_chains()
+        if command == "resids": return list_resids()
 
         raise ValueError(f"Unknown command: {command}")
 

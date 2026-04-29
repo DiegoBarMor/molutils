@@ -3,6 +3,9 @@
         path_in[]1.PATH
         ~first_only[f,first-only]
     !@
+    @resids
+        path_in[]1.PATH
+    !@
 !@
 
 @count
