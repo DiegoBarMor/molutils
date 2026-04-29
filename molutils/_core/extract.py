@@ -3,8 +3,58 @@ from collections import defaultdict
 import molutils as mu
 
 # //////////////////////////////////////////////////////////////////////////////
-class Extract:
+class Extract(mu.AppSubcommand):
+    # -------------------------------------------------------------------------- UI SECTION
+    def run(self):
+        command = self.subcommands.pop(0)
+
+        if command == "models": return self.app_extract_models()
+        if command == "chains": return self.app_extract_chains()
+
+        raise ValueError(f"Unknown command: {command}")
+
     # --------------------------------------------------------------------------
+    def app_extract_models(self):
+        path_in = self.main.get_arg_path("path_in")
+        self.main.assert_file_in(path_in)
+
+        folder_out = self.main.get_arg_path("folder_out", default = path_in.parent)
+        self.main.assert_dir_out(folder_out)
+
+        data_pdb = path_in.read_text()
+
+        if self.main.get_arg_bool("first_only"):
+            _, model = mu.Extract.next_model(data_pdb)
+            path_out = folder_out / f"{path_in.stem}.m0.pdb"
+            path_out.write_text(model)
+            return
+
+        for i, model in enumerate(mu.Extract.iter_models(data_pdb)):
+            path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
+            path_out.write_text(model)
+
+
+    # --------------------------------------------------------------------------
+    def app_extract_chains(self):
+        path_in = self.main.get_arg_path("path_in")
+        self.main.assert_file_in(path_in)
+
+        folder_out = self.main.get_arg_path("folder_out", default = path_in.parent)
+        self.main.assert_dir_out(folder_out)
+
+        data_pdb = path_in.read_text()
+
+        chains = mu.Extract.split_chains(data_pdb)
+
+        chain_ids = mu.List.chains(path_in, first_only = True) \
+            if self.main.get_arg_bool("first_only") else chains.keys()
+
+        for chain_id in chain_ids:
+            path_out = folder_out / f"{path_in.stem}.{chain_id}.pdb"
+            path_out.write_text(chains[chain_id])
+
+
+    # -------------------------------------------------------------------------- LOGIC SECTION
     @classmethod
     def next_model(cls, data: str, start: int = 0) -> tuple[int, str]:
         idx_0 = data.find("\nMODEL", start)
