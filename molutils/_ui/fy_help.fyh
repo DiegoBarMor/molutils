@@ -7,7 +7,7 @@
         !fyh:path_in Path of a PDB file.
         !fyh:first_only Use this flag for displaying only the first chain of the structure.
     !@
-    @resids
+    @residues
         !fyh:_ Lists the residue identifiers in a PDB file in the format "chainid.resid".
         !fyh:path_in Path of a PDB file.
     !@
@@ -25,13 +25,18 @@
     !fyh:_ Extract specific sections of data from biomolecular structures.
     @models
         !fyh:_ Extracts the models in a PDB file into separate files.
-        !use:_extract
+        !use:_io_filein_dirout
         !fyh:first_only Use this flag for extracting only the first model of the structure and disregard the rest.
     !@
     @chains
         !fyh:_ Extracts the chains in a PDB file into separate files.
-        !use:_extract
+        !use:_io_filein_dirout
         !fyh:first_only Use this flag for extracting only the first chain of the structure and disregard the rest.
+    !@
+    @residue
+        !fyh:_ Extract a specific residue from a PDB file into a separate file.
+        !use:_io_filein_dirout
+        !fyh:residue Residue to extract, in the format "chainid.resid".
     !@
 !@
 
@@ -42,8 +47,8 @@
     !fyh:path_out Path for the output selected atoms. Can be anything supported by MDanalysis.
 !@
 
-!def _extract
+!def _io_filein_dirout
     !fyh:path_in Path of a PDB file.
-    !fyh:folder_out Path of the directory where to place the unpacked structures.
+    !fyh:folder_out Path of the directory where to place the unpacked structure(s).
         If not provided, the parent directory of the input PDB file will be used.
 !fed

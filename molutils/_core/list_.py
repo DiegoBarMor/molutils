@@ -9,7 +9,7 @@ class List(mu.AppSubcommand):
         command = self.main.subcommands.pop(0)
 
         if command == "chains": return self.app_list_chains()
-        if command == "resids": return self.app_list_resids()
+        if command == "residues": return self.app_list_residues()
 
         raise ValueError(f"Unknown command: {command}")
 
@@ -23,10 +23,10 @@ class List(mu.AppSubcommand):
 
 
     # --------------------------------------------------------------------------
-    def app_list_resids(self):
+    def app_list_residues(self):
         path_in = self.main.get_arg_path("path_in")
         self.main.assert_file_in(path_in)
-        print(*mu.List.resids(path_in))
+        print(*mu.List.residues(path_in))
 
 
     # -------------------------------------------------------------------------- LOGIC SECTION
@@ -40,14 +40,11 @@ class List(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     @classmethod
-    def resids(cls, path_pdb: Path) -> list[str]:
+    def residues(cls, path_pdb: Path) -> list[str]:
         """Returns list of unique residue identifiers in the format "chainid.resid"."""
         pdb = mu.ParserPDB.from_file(path_pdb)
-        gen_resids = (
-            f"{mu.ParserPDB.get_chainid(line)}.{mu.ParserPDB.get_resid(line)}"
-            for line in pdb.iter_atoms()
-        )
-        return sorted(set(gen_resids))
+        gen_residues = (mu.ChainResid.from_pdb(line).get_dotstr() for line in pdb.iter_atoms())
+        return sorted(set(gen_residues))
 
 
 # //////////////////////////////////////////////////////////////////////////////

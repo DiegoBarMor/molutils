@@ -6,21 +6,17 @@ import molutils as mu
 class Extract(mu.AppSubcommand):
     # -------------------------------------------------------------------------- UI SECTION
     def run(self):
-        command = self.subcommands.pop(0)
+        command = self.main.subcommands.pop(0)
 
-        if command == "models": return self.app_extract_models()
-        if command == "chains": return self.app_extract_chains()
+        if command == "models" : return self.app_extract_models()
+        if command == "chains" : return self.app_extract_chains()
+        if command == "residue": return self.app_extract_residue()
 
         raise ValueError(f"Unknown command: {command}")
 
     # --------------------------------------------------------------------------
     def app_extract_models(self):
-        path_in = self.main.get_arg_path("path_in")
-        self.main.assert_file_in(path_in)
-
-        folder_out = self.main.get_arg_path("folder_out", default = path_in.parent)
-        self.main.assert_dir_out(folder_out)
-
+        path_in, folder_out = self._io_filein_dirout()
         data_pdb = path_in.read_text()
 
         if self.main.get_arg_bool("first_only"):
@@ -36,12 +32,7 @@ class Extract(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_extract_chains(self):
-        path_in = self.main.get_arg_path("path_in")
-        self.main.assert_file_in(path_in)
-
-        folder_out = self.main.get_arg_path("folder_out", default = path_in.parent)
-        self.main.assert_dir_out(folder_out)
-
+        path_in, folder_out = self._io_filein_dirout()
         data_pdb = path_in.read_text()
 
         chains = mu.Extract.split_chains(data_pdb)
@@ -52,6 +43,19 @@ class Extract(mu.AppSubcommand):
         for chain_id in chain_ids:
             path_out = folder_out / f"{path_in.stem}.{chain_id}.pdb"
             path_out.write_text(chains[chain_id])
+
+
+    # --------------------------------------------------------------------------
+    def app_extract_residue(self):
+        path_in, folder_out = self._io_filein_dirout()
+        data_pdb = path_in.read_text()
+
+        residue_dotstr = self.main.get_arg_str("residue")
+        chres = mu.ChainResid.from_dotstr(residue_dotstr)
+        extracted = mu.Extract.residue(data_pdb, chres.resid, chres.chain)
+
+        path_out = folder_out / f"{path_in.stem}.{residue_dotstr}.pdb"
+        path_out.write_text(extracted)
 
 
     # -------------------------------------------------------------------------- LOGIC SECTION
@@ -89,6 +93,32 @@ class Extract(mu.AppSubcommand):
             chain_id: mu.ParserPDB.join_lines(lines)
             for chain_id, lines in chains.items()
         }
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def residue(cls, data: str, resid: str, chain: str = None):
+        pdb = mu.ParserPDB(data)
+        gen_residue = (
+            line for line in pdb.iter_atoms()
+            if mu.ParserPDB.get_resid(line) == resid
+        )
+        if chain is not None: gen_residue = (
+            line for line in gen_residue
+            if mu.ParserPDB.get_chainid(line) == chain
+        )
+        return mu.ParserPDB.join_lines(gen_residue)
+
+
+    # --------------------------------------------------------------------------
+    def _io_filein_dirout(self):
+        path_in = self.main.get_arg_path("path_in")
+        self.main.assert_file_in(path_in)
+
+        folder_out = self.main.get_arg_path("folder_out", default = path_in.parent)
+        self.main.assert_dir_out(folder_out)
+
+        return path_in, folder_out
 
 
 # //////////////////////////////////////////////////////////////////////////////

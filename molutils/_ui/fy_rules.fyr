@@ -3,7 +3,7 @@
         path_in[]1.PATH
         ~first_only[f,first-only]
     !@
-    @resids
+    @residues
         path_in[]1.PATH
     !@
 !@
@@ -15,8 +15,19 @@
 !@
 
 @extract
-    @models !use:_extract !@
-    @chains !use:_extract !@
+    @models
+        !use:_io_filein_dirout
+        ~first_only[f,first-only]
+    !@
+    @chains
+        !use:_io_filein_dirout
+        ~first_only[f,first-only]
+    !@
+    @residue
+        path_in[]1.PATH
+        residue[]1.STR
+        ~folder_out[o,out]1.PATH
+    !@
 !@
 
 @select
@@ -25,8 +36,7 @@
     path_out[]1.PATH
 !@
 
-!def _extract
+!def _io_filein_dirout
     path_in[]1.PATH
     ~folder_out[]1.PATH
-    ~first_only[f,first-only]
 !fed
