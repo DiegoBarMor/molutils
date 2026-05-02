@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.0] - 2025-05-02
+- Renamed `list resids` to `list residues`.
+    - Operations over "residues" aren't based on residue identifiers alone (which was hinted by using the word *resids*). Instead, they follow a **chain_id.resid** format to avoid ambiguity between different residues along chains.
+- Added `extract residue` subcommand.
+- Added `merge` subcommand.
+- Fixed typo in `Extract.run()`.
+
+
 ## [0.3.0] - 2025-04-29
 - Added list subcommand `resids`.
 

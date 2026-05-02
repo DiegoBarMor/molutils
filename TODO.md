@@ -1,0 +1,1 @@
+- Rename `extract residue` to `extract residues` and allow it to take multiple residues to extract (instead of only one).

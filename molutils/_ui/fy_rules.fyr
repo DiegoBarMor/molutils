@@ -36,6 +36,11 @@
     path_out[]1.PATH
 !@
 
+@merge
+    paths_in[]1+.PATH
+    path_out[o,out]1.PATH
+!@
+
 !def _io_filein_dirout
     path_in[]1.PATH
     ~folder_out[]1.PATH

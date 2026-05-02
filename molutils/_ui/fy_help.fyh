@@ -8,7 +8,7 @@
         !fyh:first_only Use this flag for displaying only the first chain of the structure.
     !@
     @residues
-        !fyh:_ Lists the residue identifiers in a PDB file in the format "chainid.resid".
+        !fyh:_ Lists the residues in a PDB file in the format "chainid.resid".
         !fyh:path_in Path of a PDB file.
     !@
 !@
@@ -45,6 +45,13 @@
     !fyh:query Query for selecting the atoms of interest. Must follow MDAnalysis format
     !fyh:path_in Path of the structure file whose atoms will be selected. Can be anything supported by MDanalysis.
     !fyh:path_out Path for the output selected atoms. Can be anything supported by MDanalysis.
+!@
+
+@merge
+    !fyh:_ Merge structures from multiple PDB files into a single PDB file.
+    !fyh:paths_in List of PDB file paths with the input structures to be merged.
+        At least one PDB file must be provided.
+    !fyh:path_out Path where to save the merged PDB structure.
 !@
 
 !def _io_filein_dirout

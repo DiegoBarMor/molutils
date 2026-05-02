@@ -26,6 +26,7 @@ class AppMain(fy.App):
         if command == "count"  : return mu.Count(self).run()
         if command == "extract": return mu.Extract(self).run()
         if command == "select" : return self._run_select()
+        if command == "merge"  : return self._run_merge()
         raise ValueError(f"Unknown command: {command}")
 
 
@@ -37,6 +38,17 @@ class AppMain(fy.App):
 
         import MDAnalysis as mda
         mda.Universe(path_in).select_atoms(query).write(path_out)
+
+
+    # --------------------------------------------------------------------------
+    def _run_merge(self):
+        paths_in = self.get_arg_path("paths_in", assertion = fy.PathAssertion.FILE_IN, is_list = True)
+        path_out = self.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
+        data = mu.ParserPDB.join_lines(
+            line for path_in in paths_in
+            for line in mu.ParserPDB.from_file(path_in).iter_atoms()
+        )
+        path_out.write_text(data)
 
 
 # //////////////////////////////////////////////////////////////////////////////
