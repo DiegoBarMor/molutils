@@ -1,9 +1,7 @@
 from pathlib import Path
 
-import molutils as mu
-
 import freyacli as fy
-
+import molutils as mu
 
 # //////////////////////////////////////////////////////////////////////////////
 class AppMain(fy.App):
@@ -34,9 +32,8 @@ class AppMain(fy.App):
     # --------------------------------------------------------------------------
     def _run_select(self):
         query = self.get_arg_str("query")
-        path_in = self.get_arg_path("path_in")
-        path_out = self.get_arg_path("path_out")
-        self.assert_file_in(path_in)
+        path_in = self.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_out = self.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
 
         import MDAnalysis as mda
         mda.Universe(path_in).select_atoms(query).write(path_out)

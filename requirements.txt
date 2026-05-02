@@ -1,1 +1,1 @@
-freyacli==0.3.2
+freyacli==0.4.0

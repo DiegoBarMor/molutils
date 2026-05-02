@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import freyacli as fy
 import molutils as mu
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -15,8 +16,7 @@ class Count(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_count_models(self):
-        path_in = self.main.get_arg_path("path_in")
-        self.main.assert_file_in(path_in)
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.models(path_in))
 
 

@@ -1,5 +1,6 @@
 from collections import defaultdict
 
+import freyacli as fy
 import molutils as mu
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -112,12 +113,10 @@ class Extract(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def _io_filein_dirout(self):
-        path_in = self.main.get_arg_path("path_in")
-        self.main.assert_file_in(path_in)
-
-        folder_out = self.main.get_arg_path("folder_out", default = path_in.parent)
-        self.main.assert_dir_out(folder_out)
-
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        folder_out = self.main.get_arg_path("folder_out",
+            default = path_in.parent, assertion = fy.PathAssertion.DIR_OUT
+        )
         return path_in, folder_out
 
 

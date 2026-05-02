@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import freyacli as fy
 import molutils as mu
 
 # //////////////////////////////////////////////////////////////////////////////
@@ -16,16 +17,14 @@ class List(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_list_chains(self):
-        path_in = self.main.get_arg_path("path_in")
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         first_only = self.main.get_arg_bool("first_only")
-        self.main.assert_file_in(path_in)
         print(*mu.List.chains(path_in, first_only))
 
 
     # --------------------------------------------------------------------------
     def app_list_residues(self):
-        path_in = self.main.get_arg_path("path_in")
-        self.main.assert_file_in(path_in)
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(*mu.List.residues(path_in))
 
 
