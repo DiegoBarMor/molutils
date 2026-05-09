@@ -9,7 +9,9 @@ class Count(mu.AppSubcommand):
     def run(self):
         command = self.main.subcommands.pop(0)
 
-        if command == "models": return self.app_count_models()
+        if command == "models"  : return self.app_count_models()
+        if command == "chains"  : return self.app_count_chains()
+        if command == "residues": return self.app_count_residues()
 
         raise ValueError(f"Unknown command: {command}")
 
@@ -18,6 +20,18 @@ class Count(mu.AppSubcommand):
     def app_count_models(self):
         path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.models(path_in))
+
+
+    # --------------------------------------------------------------------------
+    def app_count_chains(self):
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        print(len(mu.List.chains(path_in, do_sort = False)))
+
+
+    # --------------------------------------------------------------------------
+    def app_count_residues(self):
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        print(len(mu.List.residues(path_in, do_sort = False)))
 
 
     # -------------------------------------------------------------------------- LOGIC SECTION

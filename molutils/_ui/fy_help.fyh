@@ -19,6 +19,14 @@
         !fyh:_ Counts the number of models in a PDB file.
         !fyh:path_in Path of a PDB file.
     !@
+    @chains
+        !fyh:_ Counts the number of chains in a PDB file.
+        !fyh:path_in Path of a PDB file.
+    !@
+    @residues
+        !fyh:_ Counts the number of residues in a PDB file in the format "chainid.resid".
+        !fyh:path_in Path of a PDB file.
+    !@
 !@
 
 @extract

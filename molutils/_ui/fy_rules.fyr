@@ -12,6 +12,12 @@
     @models
         path_in[]1.PATH
     !@
+    @chains
+        path_in[]1.PATH
+    !@
+    @residues
+        path_in[]1.PATH
+    !@
 !@
 
 @extract
