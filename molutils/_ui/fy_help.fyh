@@ -27,6 +27,15 @@
         !fyh:_ Counts the number of residues in a PDB file in the format "chainid.resid".
         !fyh:path_in Path of a PDB file.
     !@
+    @frames
+        !fyh:_ Counts the number of frames in a trajectory.
+            Reports both the expected number of frames (i.e. u.trajectory.n_frames) and the number of actual valid frames.
+            These are reported as "valid/expected" and might differ in some formats, like in XYZ.
+            Requires MDAnalysis.
+        !fyh:path_struct Path of the structure file (e.g. PDB file). Can be anything supported by MDanalysis.
+            If the file also contains the trajectory data (e.g. XYZ file), then "path_traj" can be ommitted.
+        !fyh:path_traj Path of the trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
+    !@
 !@
 
 @extract

@@ -18,6 +18,10 @@
     @residues
         path_in[]1.PATH
     !@
+    @frames
+        path_struct[]1.PATH
+        ~path_traj[]1.PATH
+    !@
 !@
 
 @extract
