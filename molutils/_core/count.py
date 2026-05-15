@@ -12,6 +12,7 @@ class Count(mu.AppSubcommand):
         if command == "models"  : return self.app_count_models()
         if command == "chains"  : return self.app_count_chains()
         if command == "residues": return self.app_count_residues()
+        if command == "frames"  : return self.app_count_frames()
         if command == "altlocs" : return self.app_count_altlocs()
 
         raise ValueError(f"Unknown command: {command}")
@@ -36,6 +37,16 @@ class Count(mu.AppSubcommand):
 
 
     # --------------------------------------------------------------------------
+    def app_count_frames(self):
+        path_struct = self.main.get_arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
+        path_traj = self.main.get_arg_path("path_traj",
+            assertion = fy.PathAssertion.FILE_IN, allow_none = True
+        )
+        nframes_valid, nframes_expected = mu.Count.frames(path_struct, path_traj)
+        print(f"{nframes_valid}/{nframes_expected}")
+
+
+    # --------------------------------------------------------------------------
     def app_count_altlocs(self):
         path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.altlocs(path_in))
@@ -46,6 +57,18 @@ class Count(mu.AppSubcommand):
     def models(cls, path_pdb: Path) -> int:
         data = path_pdb.read_text()
         return max(1, cls._count_substring('\n'+data, "\nMODEL"))
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def frames(cls, path_struct: Path, path_traj: Path | None) -> tuple[int, int]:
+        import MDAnalysis as mda
+        args_traj = [str(path_traj)] if path_traj is not None else []
+        u = mda.Universe(str(path_struct), *args_traj)
+
+        nframes_expected = u.trajectory.n_frames
+        nframes_valid = sum(1 for _ in u.trajectory)
+        return nframes_valid, nframes_expected
 
 
     # --------------------------------------------------------------------------

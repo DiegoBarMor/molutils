@@ -1,3 +1,4 @@
+from pathlib import Path
 from collections import defaultdict
 
 import freyacli as fy
@@ -12,6 +13,7 @@ class Extract(mu.AppSubcommand):
         if command == "models" : return self.app_extract_models()
         if command == "chains" : return self.app_extract_chains()
         if command == "residue": return self.app_extract_residue()
+        if command == "frames" : return self.app_extract_frames()
 
         raise ValueError(f"Unknown command: {command}")
 
@@ -59,6 +61,17 @@ class Extract(mu.AppSubcommand):
         path_out.write_text(extracted)
 
 
+    # --------------------------------------------------------------------------
+    def app_extract_frames(self):
+        path_struct = self.main.get_arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
+        path_traj = self.main.get_arg_path("path_traj",
+            assertion = fy.PathAssertion.FILE_IN, allow_none = True
+        )
+        frames = self.main.get_arg_int("frames", is_list = True)
+        unpack = self.main.get_arg_bool("unpack")
+        mu.Extract.frames(path_struct, path_traj, frames, unpack)
+
+
     # -------------------------------------------------------------------------- LOGIC SECTION
     @classmethod
     def next_model(cls, data: str, start: int = 0) -> tuple[int, str]:
@@ -98,7 +111,7 @@ class Extract(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     @classmethod
-    def residue(cls, data: str, resid: str, chain: str = None):
+    def residue(cls, data: str, resid: str, chain: str = None) -> str:
         pdb = mu.ParserPDB(data)
         gen_residue = (
             line for line in pdb.iter_atoms()
@@ -109,6 +122,40 @@ class Extract(mu.AppSubcommand):
             if mu.ParserPDB.get_chainid(line) == chain
         )
         return mu.ParserPDB.join_lines(gen_residue)
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def frames(cls,
+        path_struct: Path, path_traj: Path | None,
+        frames: list[int] = None, unpack: bool = False
+    ) -> None:
+        """Note: This method directly saves the specified frames instead of returning them."""
+        import MDAnalysis as mda
+
+        args_traj = [str(path_traj)] if path_traj is not None else []
+        u = mda.Universe(str(path_struct), *args_traj)
+
+        if frames is not None and len(frames) == 1:
+            unpack = True
+
+        if unpack:
+            if frames is None: frames = range(u.trajectory.n_frames)
+            for frame in frames:
+                u.trajectory[frame]
+                path_pdb_out = path_struct.with_suffix(f".{frame:04}.pdb")
+                u.atoms.write(str(path_pdb_out))
+            return
+
+        if path_traj is None:
+            ### save a struct file separately, useful when the input file
+            ### had both the struct and traj data inside (e.g. XYZ)
+            path_pdb_out = path_struct.with_suffix(".sliced.pdb")
+            u.atoms.write(str(path_pdb_out))
+
+        path_xtc_out = path_struct.with_suffix(".sliced.xtc")
+        u.atoms.write(str(path_xtc_out), frames = "all" if frames is None else frames)
+        return
 
 
     # --------------------------------------------------------------------------
