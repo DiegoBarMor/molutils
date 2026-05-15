@@ -18,6 +18,9 @@
     @residues
         path_in[]1.PATH
     !@
+    @altlocs
+        path_in[]1.PATH
+    !@
 !@
 
 @extract

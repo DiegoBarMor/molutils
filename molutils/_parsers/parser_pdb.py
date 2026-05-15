@@ -3,6 +3,9 @@ from pathlib import Path
 # //////////////////////////////////////////////////////////////////////////////
 class ParserPDB:
     LENGTH_RECORD = 80
+    IDX0_ATOMNAME = 12
+    IDX1_ATOMNAME = 16
+    IDX_ALTLOC = 16
     IDX_CHAIN_ID = 21
     IDX0_RESID = 22
     IDX1_RESID = 26
@@ -41,6 +44,13 @@ class ParserPDB:
 
     # --------------------------------------------------------------------------
     @classmethod
+    def get_atomname(cls, line: str) -> str:
+        try: return line[cls.IDX0_ATOMNAME:cls.IDX1_ATOMNAME].strip()
+        except IndexError: raise ValueError(f"Unexpected format of ATOM records in PDB file")
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
     def get_chainid(cls, line: str) -> str:
         try: return line[cls.IDX_CHAIN_ID]
         except IndexError: raise ValueError(f"Unexpected format of ATOM records in PDB file")
@@ -50,6 +60,13 @@ class ParserPDB:
     @classmethod
     def get_resid(cls, line: str) -> str:
         return line[cls.IDX0_RESID:cls.IDX1_RESID].strip()
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def get_altloc(cls, line: str) -> str:
+        try: return line[cls.IDX_ALTLOC]
+        except IndexError: raise ValueError(f"Unexpected format of ATOM records in PDB file")
 
 
 # //////////////////////////////////////////////////////////////////////////////

@@ -27,6 +27,11 @@
         !fyh:_ Counts the number of residues in a PDB file in the format "chainid.resid".
         !fyh:path_in Path of a PDB file.
     !@
+    @altlocs
+        !fyh:_ Counts the number of atoms/heteroatoms in a PDB file that contain alternate locations (altloc).
+            Only counts one per atom, disregarding how many alternate locations it has.
+        !fyh:path_in Path of a PDB file.
+    !@
 !@
 
 @extract

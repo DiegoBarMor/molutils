@@ -12,6 +12,7 @@ class Count(mu.AppSubcommand):
         if command == "models"  : return self.app_count_models()
         if command == "chains"  : return self.app_count_chains()
         if command == "residues": return self.app_count_residues()
+        if command == "altlocs" : return self.app_count_altlocs()
 
         raise ValueError(f"Unknown command: {command}")
 
@@ -34,11 +35,39 @@ class Count(mu.AppSubcommand):
         print(len(mu.List.residues(path_in, do_sort = False)))
 
 
+    # --------------------------------------------------------------------------
+    def app_count_altlocs(self):
+        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        print(mu.Count.altlocs(path_in))
+
+
     # -------------------------------------------------------------------------- LOGIC SECTION
     @classmethod
     def models(cls, path_pdb: Path) -> int:
         data = path_pdb.read_text()
         return max(1, cls._count_substring('\n'+data, "\nMODEL"))
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def altlocs(cls, path_pdb: Path) -> int:
+        atoms: dict[str, str] = {}
+        pdb = mu.ParserPDB.from_file(path_pdb)
+
+        ### [TODO] adapt for extracting first altloc
+        for line in pdb.iter_atoms():
+            altloc = mu.ParserPDB.get_altloc(line)
+            if altloc == " ": continue
+
+            resid = mu.ChainResid.from_pdb(line).get_dotstr()
+            name = mu.ParserPDB.get_atomname(line)
+
+            key = f"{resid}.{name}"
+            if key in atoms: continue
+
+            atoms[key] = line
+
+        return len(atoms)
 
 
     # --------------------------------------------------------------------------
