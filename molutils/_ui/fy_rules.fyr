@@ -44,6 +44,7 @@
     @frames
         path_struct[]1.PATH
         ~path_traj[]1.PATH
+        ~folder_out[o,out]1.PATH
         ~frames[f,frames]1+.INT
         ~unpack[u,unpack]
     !@

@@ -1,2 +1,4 @@
 - Rename `extract residue` to `extract residues` and allow it to take multiple residues to extract (instead of only one).
 - Check if merge operation is properly overwriting output file when it already exists.
+- Add operation for merging multiple PDB frames into a single XTC file.
+- Add tests for all operations.

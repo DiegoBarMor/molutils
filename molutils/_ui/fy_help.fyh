@@ -67,6 +67,8 @@
             If the file also contains the trajectory data (e.g. XYZ file), then "path_traj" can be ommitted.
             In this case, an additional structure file (a copy of the first frame) may be exported for convenience.
         !fyh:path_traj Path of the trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
+        !fyh:folder_out Path of the directory where to place the unpacked structure(s).
+            If not provided, the parent directory of the input PDB file will be used.
         !fyh:frames Frame indices to extract. If no frames are specified, all frames are extracted.
             If only 1 frame is specified, the frame is exported to PDB (regardless of the "unpack" flag).
         !fyh:unpack When used, the specified frames will be unpacked into single PDB files.

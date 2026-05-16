@@ -63,13 +63,13 @@ class Extract(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_extract_frames(self):
-        path_struct = self.main.get_arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
+        path_struct, folder_out = self._io_filein_dirout(key_in = "path_struct")
         path_traj = self.main.get_arg_path("path_traj",
             assertion = fy.PathAssertion.FILE_IN, allow_none = True
         )
         frames = self.main.get_arg_int("frames", is_list = True)
         unpack = self.main.get_arg_bool("unpack")
-        mu.Extract.frames(path_struct, path_traj, frames, unpack)
+        mu.Extract.frames(path_struct, path_traj, folder_out, frames, unpack)
 
 
     # -------------------------------------------------------------------------- LOGIC SECTION
@@ -127,7 +127,7 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     @classmethod
     def frames(cls,
-        path_struct: Path, path_traj: Path | None,
+        path_struct: Path, path_traj: Path | None, folder_out: Path,
         frames: list[int] = None, unpack: bool = False
     ) -> None:
         """Note: This method directly saves the specified frames instead of returning them."""
@@ -143,24 +143,24 @@ class Extract(mu.AppSubcommand):
             if frames is None: frames = range(u.trajectory.n_frames)
             for frame in frames:
                 u.trajectory[frame]
-                path_pdb_out = path_struct.with_suffix(f".{frame:04}.pdb")
+                path_pdb_out = folder_out / f"{path_struct.stem}.{frame:04}.pdb"
                 u.atoms.write(str(path_pdb_out))
             return
 
         if path_traj is None:
             ### save a struct file separately, useful when the input file
             ### had both the struct and traj data inside (e.g. XYZ)
-            path_pdb_out = path_struct.with_suffix(".sliced.pdb")
+            path_pdb_out = folder_out / f"{path_struct.stem}.sliced.pdb"
             u.atoms.write(str(path_pdb_out))
 
-        path_xtc_out = path_struct.with_suffix(".sliced.xtc")
+        path_xtc_out = folder_out / f"{path_struct.stem}.sliced.xtc"
         u.atoms.write(str(path_xtc_out), frames = "all" if frames is None else frames)
         return
 
 
     # --------------------------------------------------------------------------
-    def _io_filein_dirout(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+    def _io_filein_dirout(self, key_in = "path_in") -> tuple[Path, Path]:
+        path_in = self.main.get_arg_path(key_in, assertion = fy.PathAssertion.FILE_IN)
         folder_out = self.main.get_arg_path("folder_out",
             default = path_in.parent, assertion = fy.PathAssertion.DIR_OUT
         )
