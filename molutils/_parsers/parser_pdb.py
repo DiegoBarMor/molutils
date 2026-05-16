@@ -69,4 +69,12 @@ class ParserPDB:
         except IndexError: raise ValueError(f"Unexpected format of ATOM records in PDB file")
 
 
+    # --------------------------------------------------------------------------
+    @classmethod
+    def set_altloc(cls, line: str, altloc: str) -> str:
+        if len(altloc) != 1: raise ValueError(f"altloc must be a single character")
+        try: return line[:cls.IDX_ALTLOC] + altloc + line[cls.IDX_ALTLOC+1:]
+        except IndexError: raise ValueError(f"Unexpected format of ATOM records in PDB file")
+
+
 # //////////////////////////////////////////////////////////////////////////////

@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.5.0] - 2025-05-16
+- Added `count chains`, `count residues` and `count altlocs` subcommands.
+- Added `remove` subcommand, with `remove altlocs` subcommand.
+- Started adding operations for trajectories.
+	- Added `count frames` subcommand.
+	- Added `extract frames` subcommand.
+
+
 ## [0.4.0] - 2025-05-02
 - Renamed `list resids` to `list residues`.
     - Operations over "residues" aren't based on residue identifiers alone (which was hinted by using the word *resids*). Instead, they follow a **chain_id.resid** format to avoid ambiguity between different residues along chains.

@@ -8,5 +8,6 @@ from ._ui.app_subcommand import AppSubcommand
 from ._core.list_ import List
 from ._core.count import Count
 from ._core.extract import Extract
+from ._core.remove import Remove
 
 from ._ui.app_main import AppMain
