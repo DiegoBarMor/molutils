@@ -1,6 +1,7 @@
 from pathlib import Path
 from collections import defaultdict
 
+import molsimple as ms
 import freyacli as fy
 import molutils as mu
 
@@ -20,17 +21,12 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_models(self):
         path_in, folder_out = self._io_filein_dirout()
-        data_pdb = path_in.read_text()
 
-        if self.main.get_arg_bool("first_only"):
-            _, model = mu.Extract.next_model(data_pdb)
-            path_out = folder_out / f"{path_in.stem}.m0.pdb"
-            path_out.write_text(model)
-            return
-
-        for i, model in enumerate(mu.Extract.iter_models(data_pdb)):
+        first_only = self.main.get_arg_bool("first_only")
+        for i, model in enumerate(ms.System(path_in).models):
             path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
-            path_out.write_text(model)
+            model.save(path_out)
+            if first_only: break
 
 
     # --------------------------------------------------------------------------
@@ -70,29 +66,6 @@ class Extract(mu.AppSubcommand):
         frames = self.main.get_arg_int("frames", is_list = True)
         unpack = self.main.get_arg_bool("unpack")
         mu.Extract.frames(path_struct, path_traj, folder_out, frames, unpack)
-
-
-    # -------------------------------------------------------------------------- LOGIC SECTION
-    @classmethod
-    def next_model(cls, data: str, start: int = 0) -> tuple[int, str]:
-        idx_0 = data.find("\nMODEL", start)
-        if idx_0 == -1: return -1, data
-
-        idx_1 = data.find("\nENDMDL", idx_0)
-        if idx_1 == -1: return -1, data[idx_0:]
-
-        idx_1 += len("\nENDMDL")
-        return idx_1, data[idx_0:idx_1] + "\nEND"
-
-
-    # --------------------------------------------------------------------------
-    @classmethod
-    def iter_models(cls, data: str):
-        while data:
-            idx, model = cls.next_model(data)
-            yield model
-            if idx == -1: break
-            data = data[idx:]
 
 
     # --------------------------------------------------------------------------
