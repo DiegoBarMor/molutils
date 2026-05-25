@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import molsimple as ms
 import freyacli as fy
 import molutils as mu
 
@@ -74,21 +75,20 @@ class Count(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     @classmethod
     def altlocs(cls, path_pdb: Path) -> int:
-        atoms: dict[str, str] = {}
-        pdb = mu.ParserPDB.from_file(path_pdb)
+        atoms: dict[str, ms.Particle] = {}
+        pdb = ms.System(path_pdb)
 
         ### [TODO] adapt for extracting first altloc
-        for line in pdb.iter_atoms():
-            altloc = mu.ParserPDB.get_altloc(line)
-            if altloc == " ": continue
+        for particle in pdb.particles:
+            if particle.altloc == "": continue
 
-            resid = mu.ChainResid.from_pdb(line).get_dotstr()
-            name = mu.ParserPDB.get_atomname(line)
+            chres = particle.get_chain_resid().get_dotstr()
+            name  = particle.name
 
-            key = f"{resid}.{name}"
+            key = f"{chres}.{name}"
             if key in atoms: continue
 
-            atoms[key] = line
+            atoms[key] = particle
 
         return len(atoms)
 

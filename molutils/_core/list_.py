@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import molsimple as ms
 import freyacli as fy
 import molutils as mu
 
@@ -42,8 +43,8 @@ class List(mu.AppSubcommand):
     @classmethod
     def residues(cls, path_pdb: Path, do_sort: bool = True) -> list[str]:
         """Returns list of unique residue identifiers in the format "chainid.resid"."""
-        pdb = mu.ParserPDB.from_file(path_pdb)
-        gen_residues = (mu.ChainResid.from_pdb(line).get_dotstr() for line in pdb.iter_atoms())
+        pdb = ms.System(path_pdb)
+        gen_residues = (part.get_chain_resid().get_dotstr() for part in pdb)
         if do_sort: return sorted(set(gen_residues))
         return list(set(gen_residues))
 

@@ -47,14 +47,12 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_residue(self):
         path_in, folder_out = self._io_filein_dirout()
-        data_pdb = path_in.read_text()
-
         residue_dotstr = self.main.get_arg_str("residue")
-        chres = mu.ChainResid.from_dotstr(residue_dotstr)
-        extracted = mu.Extract.residue(data_pdb, chres.resid, chres.chain)
 
-        path_out = folder_out / f"{path_in.stem}.{residue_dotstr}.pdb"
-        path_out.write_text(extracted)
+        pdb = ms.System(path_in)
+        chres = ms.ChainResid.from_dotstr(residue_dotstr)
+        extracted = pdb.particles.select_chain_resid(chres)
+        extracted.save(folder_out / f"{path_in.stem}.{residue_dotstr}.pdb")
 
 
     # --------------------------------------------------------------------------
@@ -80,21 +78,6 @@ class Extract(mu.AppSubcommand):
             chain_id: mu.ParserPDB.join_lines(lines)
             for chain_id, lines in chains.items()
         }
-
-
-    # --------------------------------------------------------------------------
-    @classmethod
-    def residue(cls, data: str, resid: str, chain: str = None) -> str:
-        pdb = mu.ParserPDB(data)
-        gen_residue = (
-            line for line in pdb.iter_atoms()
-            if mu.ParserPDB.get_resid(line) == resid
-        )
-        if chain is not None: gen_residue = (
-            line for line in gen_residue
-            if mu.ParserPDB.get_chainid(line) == chain
-        )
-        return mu.ParserPDB.join_lines(gen_residue)
 
 
     # --------------------------------------------------------------------------
