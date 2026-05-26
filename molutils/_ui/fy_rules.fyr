@@ -1,7 +1,6 @@
 @list
     @chains
         path_in[]1.PATH
-        ~first_only[f,first-only]
     !@
     @residues
         path_in[]1.PATH
