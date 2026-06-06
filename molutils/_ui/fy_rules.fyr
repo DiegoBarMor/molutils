@@ -61,6 +61,7 @@
     query[]1.STR
     path_in[]1.PATH
     path_out[]1.PATH
+    ~paths_traj[t,traj]2.PATH
 !@
 
 @merge

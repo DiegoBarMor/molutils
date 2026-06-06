@@ -81,6 +81,8 @@
     !fyh:query Query for selecting the atoms of interest. Must follow MDAnalysis format
     !fyh:path_in Path of the structure file whose atoms will be selected. Can be anything supported by MDanalysis.
     !fyh:path_out Path for the output selected atoms. Can be anything supported by MDanalysis.
+    !fyh:paths_traj Input and output paths for an optional trajectory.
+        The selection will be applied for all frames of the selection accordingly.
 !@
 
 @merge

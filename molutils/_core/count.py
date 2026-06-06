@@ -43,7 +43,9 @@ class Count(mu.AppSubcommand):
             assertion = fy.PathAssertion.FILE_IN, allow_none = True
         )
         nframes_valid, nframes_expected = mu.Count.frames(path_struct, path_traj)
-        print(f"{nframes_valid}/{nframes_expected}")
+        # print(f"{nframes_valid}/{nframes_expected}")
+        print(f"{nframes_valid}")
+
 
 
     # --------------------------------------------------------------------------
