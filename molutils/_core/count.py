@@ -49,7 +49,8 @@ class Count(mu.AppSubcommand):
         u = mda.Universe(str(path_struct), *args_traj)
 
         nframes_valid, nframes_expected = mu.Count.frames(u)
-        print(f"{nframes_valid}/{nframes_expected}")
+        print(f"{nframes_valid}")
+
 
 
     # --------------------------------------------------------------------------

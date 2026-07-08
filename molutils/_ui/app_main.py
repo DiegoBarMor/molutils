@@ -36,9 +36,19 @@ class AppMain(fy.App):
         query = self.get_arg_str("query")
         path_in = self.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         path_out = self.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
+        paths_traj = self.get_arg_path("paths_traj",
+            assertion = fy.PathAssertion.FILE_IN, allow_none = True,
+            is_list = True
+        )
 
         import MDAnalysis as mda
         mda.Universe(path_in).select_atoms(query).write(path_out)
+
+        if paths_traj is None: return
+
+        path_traj_in, path_traj_out = paths_traj
+        u = mda.Universe(path_in, path_traj_in)
+        u.select_atoms(query).write(str(path_traj_out), frames = "all")
 
 
     # --------------------------------------------------------------------------
