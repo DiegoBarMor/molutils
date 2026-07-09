@@ -21,8 +21,8 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_models(self):
         path_in, folder_out = self._io_filein_dirout()
-
         first_only = self.main.get_arg_bool("first_only")
+
         for i, model in enumerate(ms.System(path_in).models):
             path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
             model.save(path_out)
@@ -32,16 +32,15 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_chains(self):
         path_in, folder_out = self._io_filein_dirout()
-        data_pdb = path_in.read_text()
+        first_only = self.main.get_arg_bool("first_only")
 
-        chains = mu.Extract.split_chains(data_pdb)
-
-        chain_ids = mu.List.chains(path_in, first_only = True) \
-            if self.main.get_arg_bool("first_only") else chains.keys()
+        particles = ms.System(path_in).particles
+        chain_ids = mu.List.chains(path_in)
 
         for chain_id in chain_ids:
             path_out = folder_out / f"{path_in.stem}.{chain_id}.pdb"
-            path_out.write_text(chains[chain_id])
+            particles.select_chainid(chain_id).save(path_out)
+            if first_only: break
 
 
     # --------------------------------------------------------------------------
@@ -64,20 +63,6 @@ class Extract(mu.AppSubcommand):
         frames = self.main.get_arg_int("frames", is_list = True)
         unpack = self.main.get_arg_bool("unpack")
         mu.Extract.frames(path_struct, path_traj, folder_out, frames, unpack)
-
-
-    # --------------------------------------------------------------------------
-    @classmethod
-    def split_chains(cls, data: str) -> dict[str, str]:
-        pdb = mu.ParserPDB(data)
-        chains = defaultdict(list)
-        for line in pdb.iter_atoms():
-            chain_id = mu.ParserPDB.get_chainid(line)
-            chains[chain_id].append(line)
-        return {
-            chain_id: mu.ParserPDB.join_lines(lines)
-            for chain_id, lines in chains.items()
-        }
 
 
     # --------------------------------------------------------------------------

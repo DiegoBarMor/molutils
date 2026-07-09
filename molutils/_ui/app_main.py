@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import molsimple as ms
 import freyacli as fy
 import molutils as mu
 
@@ -55,11 +56,8 @@ class AppMain(fy.App):
     def _run_merge(self):
         paths_in = self.get_arg_path("paths_in", assertion = fy.PathAssertion.FILE_IN, is_list = True)
         path_out = self.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
-        data = mu.ParserPDB.join_lines(
-            line for path_in in paths_in
-            for line in mu.ParserPDB.from_file(path_in).iter_atoms()
-        )
-        path_out.write_text(data)
+        pgroups = (ms.System.read_pdb(path_in).particles for path_in in paths_in)
+        ms.ParticleGroup((p for pgroup in pgroups for p in pgroup)).save(path_out)
 
 
 # //////////////////////////////////////////////////////////////////////////////
