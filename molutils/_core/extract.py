@@ -1,6 +1,7 @@
 from pathlib import Path
 from collections import defaultdict
 
+import molsimple as ms
 import freyacli as fy
 import molutils as mu
 
@@ -20,45 +21,37 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_models(self):
         path_in, folder_out = self._io_filein_dirout()
-        data_pdb = path_in.read_text()
+        first_only = self.main.get_arg_bool("first_only")
 
-        if self.main.get_arg_bool("first_only"):
-            _, model = mu.Extract.next_model(data_pdb)
-            path_out = folder_out / f"{path_in.stem}.m0.pdb"
-            path_out.write_text(model)
-            return
-
-        for i, model in enumerate(mu.Extract.iter_models(data_pdb)):
+        for i, model in enumerate(ms.System(path_in).models):
             path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
-            path_out.write_text(model)
+            model.save(path_out)
+            if first_only: break
 
 
     # --------------------------------------------------------------------------
     def app_extract_chains(self):
         path_in, folder_out = self._io_filein_dirout()
-        data_pdb = path_in.read_text()
+        first_only = self.main.get_arg_bool("first_only")
 
-        chains = mu.Extract.split_chains(data_pdb)
-
-        chain_ids = mu.List.chains(path_in, first_only = True) \
-            if self.main.get_arg_bool("first_only") else chains.keys()
+        particles = ms.System(path_in).particles
+        chain_ids = mu.List.chains(path_in)
 
         for chain_id in chain_ids:
             path_out = folder_out / f"{path_in.stem}.{chain_id}.pdb"
-            path_out.write_text(chains[chain_id])
+            particles.select_chainid(chain_id).save(path_out)
+            if first_only: break
 
 
     # --------------------------------------------------------------------------
     def app_extract_residue(self):
         path_in, folder_out = self._io_filein_dirout()
-        data_pdb = path_in.read_text()
-
         residue_dotstr = self.main.get_arg_str("residue")
-        chres = mu.ChainResid.from_dotstr(residue_dotstr)
-        extracted = mu.Extract.residue(data_pdb, chres.resid, chres.chain)
 
-        path_out = folder_out / f"{path_in.stem}.{residue_dotstr}.pdb"
-        path_out.write_text(extracted)
+        pdb = ms.System(path_in)
+        chres = ms.ChainResid.from_dotstr(residue_dotstr)
+        extracted = pdb.particles.select_chain_resid(chres)
+        extracted.save(folder_out / f"{path_in.stem}.{residue_dotstr}.pdb")
 
 
     # --------------------------------------------------------------------------
@@ -70,58 +63,6 @@ class Extract(mu.AppSubcommand):
         frames = self.main.get_arg_int("frames", is_list = True)
         unpack = self.main.get_arg_bool("unpack")
         mu.Extract.frames(path_struct, path_traj, folder_out, frames, unpack)
-
-
-    # -------------------------------------------------------------------------- LOGIC SECTION
-    @classmethod
-    def next_model(cls, data: str, start: int = 0) -> tuple[int, str]:
-        idx_0 = data.find("\nMODEL", start)
-        if idx_0 == -1: return -1, data
-
-        idx_1 = data.find("\nENDMDL", idx_0)
-        if idx_1 == -1: return -1, data[idx_0:]
-
-        idx_1 += len("\nENDMDL")
-        return idx_1, data[idx_0:idx_1] + "\nEND"
-
-
-    # --------------------------------------------------------------------------
-    @classmethod
-    def iter_models(cls, data: str):
-        while data:
-            idx, model = cls.next_model(data)
-            yield model
-            if idx == -1: break
-            data = data[idx:]
-
-
-    # --------------------------------------------------------------------------
-    @classmethod
-    def split_chains(cls, data: str) -> dict[str, str]:
-        pdb = mu.ParserPDB(data)
-        chains = defaultdict(list)
-        for line in pdb.iter_atoms():
-            chain_id = mu.ParserPDB.get_chainid(line)
-            chains[chain_id].append(line)
-        return {
-            chain_id: mu.ParserPDB.join_lines(lines)
-            for chain_id, lines in chains.items()
-        }
-
-
-    # --------------------------------------------------------------------------
-    @classmethod
-    def residue(cls, data: str, resid: str, chain: str = None) -> str:
-        pdb = mu.ParserPDB(data)
-        gen_residue = (
-            line for line in pdb.iter_atoms()
-            if mu.ParserPDB.get_resid(line) == resid
-        )
-        if chain is not None: gen_residue = (
-            line for line in gen_residue
-            if mu.ParserPDB.get_chainid(line) == chain
-        )
-        return mu.ParserPDB.join_lines(gen_residue)
 
 
     # --------------------------------------------------------------------------
