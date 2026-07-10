@@ -1,2 +1,2 @@
-molsimple==0.1.0
-freyacli==0.4.1
+molsimple==0.1.2
+freyacli==0.4.4

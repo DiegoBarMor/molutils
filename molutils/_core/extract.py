@@ -23,7 +23,7 @@ class Extract(mu.AppSubcommand):
         path_in, folder_out = self._io_filein_dirout()
         first_only = self.main.get_arg_bool("first_only")
 
-        for i, model in enumerate(ms.System(path_in).models):
+        for i, model in enumerate(ms.System.read_pdb(path_in).models):
             path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
             model.save(path_out)
             if first_only: break
@@ -34,7 +34,7 @@ class Extract(mu.AppSubcommand):
         path_in, folder_out = self._io_filein_dirout()
         first_only = self.main.get_arg_bool("first_only")
 
-        particles = ms.System(path_in).particles
+        particles = ms.System.read_pdb(path_in).particles
         chain_ids = mu.List.chains(path_in)
 
         for chain_id in chain_ids:
@@ -48,7 +48,7 @@ class Extract(mu.AppSubcommand):
         path_in, folder_out = self._io_filein_dirout()
         residue_dotstr = self.main.get_arg_str("residue")
 
-        pdb = ms.System(path_in)
+        pdb = ms.System.read_pdb(path_in)
         chres = ms.ChainResid.from_dotstr(residue_dotstr)
         extracted = pdb.particles.select_chain_resid(chres)
         extracted.save(folder_out / f"{path_in.stem}.{residue_dotstr}.pdb")

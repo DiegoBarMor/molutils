@@ -22,19 +22,19 @@ class Count(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_count_models(self):
         path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
-        print(mu.Count.models(ms.System(path_in)))
+        print(mu.Count.models(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_chains(self):
         path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
-        print(mu.Count.chains(ms.System(path_in)))
+        print(mu.Count.chains(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_residues(self):
         path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
-        print(mu.Count.residues(ms.System(path_in)))
+        print(mu.Count.residues(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
@@ -48,7 +48,7 @@ class Count(mu.AppSubcommand):
         args_traj = [str(path_traj)] if path_traj is not None else []
         u = mda.Universe(str(path_struct), *args_traj)
 
-        nframes_valid, nframes_expected = mu.Count.frames(u)
+        nframes_valid, _ = mu.Count.frames(u)
         print(f"{nframes_valid}")
 
 
@@ -56,7 +56,7 @@ class Count(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_count_altlocs(self):
         path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
-        print(mu.Count.altlocs(ms.System(path_in)))
+        print(mu.Count.altlocs(ms.System.read_pdb(path_in)))
 
 
     # -------------------------------------------------------------------------- LOGIC SECTION

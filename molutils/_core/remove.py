@@ -25,7 +25,7 @@ class Remove(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     @classmethod
     def altlocs(cls, path_pdb: Path) -> ms.ParticleGroup:
-        pdb = ms.System(path_pdb)
+        pdb = ms.System.read_pdb(path_pdb)
 
         out: list[ms.Particle] = []
         seen_altlocs = set()
