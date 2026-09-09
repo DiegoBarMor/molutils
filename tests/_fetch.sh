@@ -5,10 +5,5 @@ if [ ! -d "tests" ]; then
     echo "This script must be run from the root of the repository (where the 'tests' directory is located)."
     exit 1
 fi
-if [ ! -d "tests/data" ]; then
-    bash tests/_fetch.sh
-fi
 
-echo ">>> TEST MOLUTILS 04: SELECT"
-
-# python3 molutils select # [TODO]
+git clone --depth 1 --branch molutils https://github.com/DiegoBarMor/volgrids-testdata/ tests/data

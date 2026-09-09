@@ -2,4 +2,4 @@
 desktop.ini
 **/__pycache__/
 
-tests/data/out/
+tests/data/
