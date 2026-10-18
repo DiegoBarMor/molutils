@@ -12,9 +12,10 @@ fi
 echo ">>> TEST MOLUTILS 01: COUNT"
 
 dir_in="tests/data/input"
+dir_traj="$dir_in/traj"
 
 python3 molutils count models "$dir_in/1aju.pdb" # expected: 20
 python3 molutils count chains "$dir_in/prot_rna.pdb" # expected: 2
 python3 molutils count residues "$dir_in/prot_rna.pdb" # expected: 184
-# python3 molutils count frames # [TODO] # expected:
+python3 molutils count frames "$dir_traj/7vki.pdb" "$dir_traj/7vki.xtc" # expected: 200
 python3 molutils count altlocs "$dir_in/6e9a.pdb" # expected: 267
