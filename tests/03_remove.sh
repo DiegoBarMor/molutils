@@ -12,8 +12,8 @@ fi
 echo ">>> TEST MOLUTILS 03: REMOVE"
 
 dir_in="tests/data/input"
-dir_out="tests/data/output/altlocs"
+dir_out="tests/data/output/remove"
 mkdir -p "$dir_out"
 
-cp "$dir_in/6e9a.pdb" "$dir_out/6e9a.orig.pdb"
-python3 molutils remove altlocs "$dir_in/6e9a.pdb" "$dir_out/6e9a.clean.pdb"
+cp "$dir_in/6e9a.pdb" "$dir_out/6e9a.with_altloc.pdb"
+python3 molutils remove altlocs "$dir_in/6e9a.pdb" "$dir_out/6e9a.no_altloc.pdb"

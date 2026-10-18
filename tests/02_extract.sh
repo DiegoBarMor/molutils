@@ -13,7 +13,7 @@ echo ">>> TEST MOLUTILS 02: EXTRACT"
 
 dir_in="tests/data/input"
 dir_traj="$dir_in/traj"
-dir_out="tests/data/output"
+dir_out="tests/data/output/extract"
 
 python3 molutils extract models "$dir_in/1aju.pdb" "$dir_out/models_all"
 python3 molutils extract models "$dir_in/1aju.pdb" "$dir_out/models_1" -f

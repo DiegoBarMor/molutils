@@ -11,4 +11,7 @@ fi
 
 echo ">>> TEST MOLUTILS 05: MERGE"
 
-# python3 molutils merge # [TODO]
+dir_in="tests/data/input"
+dir_out="tests/data/output/merge"
+
+python3 molutils merge "$dir_in/1aju.pdb" "$dir_in/6e9a.pdb" -o "$dir_out/merged.pdb"
