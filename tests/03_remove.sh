@@ -1,0 +1,19 @@
+#!/bin/bash
+set -euo pipefail
+
+if [ ! -d "tests" ]; then
+    echo "This script must be run from the root of the repository (where the 'tests' directory is located)."
+    exit 1
+fi
+if [ ! -d "tests/data" ]; then
+    bash tests/_fetch.sh
+fi
+
+echo ">>> TEST MOLUTILS 03: REMOVE"
+
+dir_in="tests/data/input"
+dir_out="tests/data/output/remove"
+mkdir -p "$dir_out"
+
+cp "$dir_in/6e9a.pdb" "$dir_out/6e9a.with_altloc.pdb"
+python3 molutils remove altlocs "$dir_in/6e9a.pdb" "$dir_out/6e9a.no_altloc.pdb"

@@ -34,12 +34,12 @@ class Extract(mu.AppSubcommand):
         path_in, folder_out = self._io_filein_dirout()
         first_only = self.main.get_arg_bool("first_only")
 
-        particles = ms.System.read_pdb(path_in).particles
-        chain_ids = mu.List.chains(path_in)
+        system = ms.System.read_pdb(path_in)
+        chain_ids = mu.List.chains(system, do_sort = False)
 
         for chain_id in chain_ids:
             path_out = folder_out / f"{path_in.stem}.{chain_id}.pdb"
-            particles.select_chainid(chain_id).save(path_out)
+            system.particles.select_chainid(chain_id).save(path_out)
             if first_only: break
 
 
