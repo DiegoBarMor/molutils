@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import molsimple as ms
 import freyacli as fy
 import molutils as mu
 
@@ -36,15 +37,14 @@ class AppMain(fy.App):
         query = self.get_arg_str("query")
         path_in = self.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         path_out = self.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
-        paths_traj = self.get_arg_path("paths_traj",
-            assertion = fy.PathAssertion.FILE_IN, allow_none = True,
-            is_list = True
+        paths_traj = self.get_arg_path("paths_traj", assertion = fy.PathAssertion.FILE_OUT,
+            allow_none = True, is_list = True
         )
 
         import MDAnalysis as mda
         mda.Universe(path_in).select_atoms(query).write(path_out)
 
-        if paths_traj is None: return
+        if paths_traj == [None]: return
 
         path_traj_in, path_traj_out = paths_traj
         u = mda.Universe(path_in, path_traj_in)
@@ -55,11 +55,8 @@ class AppMain(fy.App):
     def _run_merge(self):
         paths_in = self.get_arg_path("paths_in", assertion = fy.PathAssertion.FILE_IN, is_list = True)
         path_out = self.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
-        data = mu.ParserPDB.join_lines(
-            line for path_in in paths_in
-            for line in mu.ParserPDB.from_file(path_in).iter_atoms()
-        )
-        path_out.write_text(data)
+        pgroups = (ms.System.read_pdb(path_in).particles for path_in in paths_in)
+        ms.ParticleGroup((p for pgroup in pgroups for p in pgroup)).save(path_out)
 
 
 # //////////////////////////////////////////////////////////////////////////////

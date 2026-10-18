@@ -5,7 +5,6 @@
     @chains
         !fyh:_ Lists the chains in a PDB file.
         !fyh:path_in Path of a PDB file.
-        !fyh:first_only Use this flag for displaying only the first chain of the structure.
     !@
     @residues
         !fyh:_ Lists the residues in a PDB file in the format "chainid.resid".
