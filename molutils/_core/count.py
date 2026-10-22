@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import molsimple as ms
 import freyacli as fy
 import molutils as mu
@@ -10,39 +8,44 @@ class Count(mu.AppSubcommand):
     def run(self):
         command = self.main.subcommands.pop(0)
 
-        if command == "models"  : return self.app_count_models()
-        if command == "chains"  : return self.app_count_chains()
-        if command == "residues": return self.app_count_residues()
-        if command == "frames"  : return self.app_count_frames()
-        if command == "altlocs" : return self.app_count_altlocs()
+        if command == "models"   : return self.app_count_models()
+        if command == "chains"   : return self.app_count_chains()
+        if command == "residues" : return self.app_count_residues()
+        if command == "particles": return self.app_count_particles()
+        if command == "frames"   : return self.app_count_frames()
+        if command == "altlocs"  : return self.app_count_altlocs()
 
         raise ValueError(f"Unknown command: {command}")
 
 
     # --------------------------------------------------------------------------
     def app_count_models(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.models(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_chains(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.chains(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_residues(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.residues(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
+    def app_count_particles(self):
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        print(mu.Count.particles(ms.System.read_pdb(path_in)))
+
+
+    # --------------------------------------------------------------------------
     def app_count_frames(self):
-        path_struct = self.main.get_arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
-        path_traj = self.main.get_arg_path("path_traj",
-            assertion = fy.PathAssertion.FILE_IN, allow_none = True
-        )
+        path_struct = self.main.arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
+        path_traj = self.main.arg_path("path_traj", assertion = fy.PathAssertion.FILE_IN)
 
         import MDAnalysis as mda
         args_traj = [str(path_traj)] if path_traj is not None else []
@@ -55,7 +58,7 @@ class Count(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_count_altlocs(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.altlocs(ms.System.read_pdb(path_in)))
 
 
@@ -75,6 +78,12 @@ class Count(mu.AppSubcommand):
     @classmethod
     def residues(cls, system: ms.System) -> int:
         return len(mu.List.residues(system, do_sort = False))
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def particles(cls, system: ms.System) -> int:
+        return len(system.particles)
 
 
     # --------------------------------------------------------------------------

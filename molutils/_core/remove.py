@@ -17,8 +17,8 @@ class Remove(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_remove_altlocs(self):
-        path_in  = self.main.get_arg_path("path_in",  assertion = fy.PathAssertion.FILE_IN)
-        path_out = self.main.get_arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
+        path_in  = self.main.arg_path("path_in",  assertion = fy.PathAssertion.FILE_IN)
+        path_out = self.main.arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
         mu.Remove.altlocs(path_in).save(path_out)
 
 

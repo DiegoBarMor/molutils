@@ -23,7 +23,7 @@ setup(
     },
     install_requires=[
         "molsimple==0.1.2",
-        "freyacli==0.4.5",
+        "freyacli==0.5.0",
     ],
     entry_points={
         "console_scripts": [

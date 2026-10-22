@@ -20,10 +20,17 @@
     !@
     @chains
         !fyh:_ Counts the number of chains in a PDB file.
+            Considers only the first model of the molecular system.
         !fyh:path_in Path of a PDB file.
     !@
     @residues
         !fyh:_ Counts the number of residues in a PDB file in the format "chainid.resid".
+            Considers only the first model of the molecular system.
+        !fyh:path_in Path of a PDB file.
+    !@
+    @particles
+        !fyh:_ Counts the number of particles in a PDB file in the format "chainid.resid".
+            Considers only the first model of the molecular system.
         !fyh:path_in Path of a PDB file.
     !@
     @frames
@@ -45,12 +52,12 @@
 @extract
     !fyh:_ Extract specific sections of data from biomolecular structures.
     @models
-        !fyh:_ Extracts the models in a PDB file into separate files.
+        !fyh:_ Extract the models in a PDB file into separate files.
         !use:_io_filein_dirout
         !fyh:first_only Use this flag for extracting only the first model of the structure and disregard the rest.
     !@
     @chains
-        !fyh:_ Extracts the chains in a PDB file into separate files.
+        !fyh:_ Extract the chains in a PDB file into separate files.
         !use:_io_filein_dirout
         !fyh:first_only Use this flag for extracting only the first chain of the structure and disregard the rest.
     !@
@@ -73,6 +80,10 @@
         !fyh:unpack When used, the specified frames will be unpacked into single PDB files.
             Otherwise, the frames are exported into a single XTC file.
     !@
+!@
+
+@remove
+    !fyh:_ Remove undesired data from a PDB file.
 !@
 
 @select

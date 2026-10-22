@@ -21,7 +21,7 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_models(self):
         path_in, folder_out = self._io_filein_dirout()
-        first_only = self.main.get_arg_bool("first_only")
+        first_only = self.main.arg_toggle("first_only")
 
         for i, model in enumerate(ms.System.read_pdb(path_in).models):
             path_out = folder_out / f"{path_in.stem}.m{i:03}.pdb"
@@ -32,7 +32,7 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_chains(self):
         path_in, folder_out = self._io_filein_dirout()
-        first_only = self.main.get_arg_bool("first_only")
+        first_only = self.main.arg_toggle("first_only")
 
         system = ms.System.read_pdb(path_in)
         chain_ids = mu.List.chains(system, do_sort = False)
@@ -46,7 +46,7 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_residue(self):
         path_in, folder_out = self._io_filein_dirout()
-        residue_dotstr = self.main.get_arg_str("residue")
+        residue_dotstr = self.main.arg_str("residue")
 
         pdb = ms.System.read_pdb(path_in)
         chres = ms.ChainResid.from_dotstr(residue_dotstr)
@@ -57,11 +57,9 @@ class Extract(mu.AppSubcommand):
     # --------------------------------------------------------------------------
     def app_extract_frames(self):
         path_struct, folder_out = self._io_filein_dirout(key_in = "path_struct")
-        path_traj = self.main.get_arg_path("path_traj",
-            assertion = fy.PathAssertion.FILE_IN, allow_none = True
-        )
-        frames = self.main.get_arg_int("frames", is_list = True)
-        unpack = self.main.get_arg_bool("unpack")
+        path_traj = self.main.arg_path("path_traj", assertion = fy.PathAssertion.FILE_IN)
+        frames = self.main.arg_int_list("frames")
+        unpack = self.main.arg_toggle("unpack")
         mu.Extract.frames(path_struct, path_traj, folder_out, frames, unpack)
 
 
@@ -101,8 +99,8 @@ class Extract(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def _io_filein_dirout(self, key_in = "path_in") -> tuple[Path, Path]:
-        path_in = self.main.get_arg_path(key_in, assertion = fy.PathAssertion.FILE_IN)
-        folder_out = self.main.get_arg_path("folder_out",
+        path_in = self.main.arg_path(key_in, assertion = fy.PathAssertion.FILE_IN)
+        folder_out = self.main.arg_path("folder_out",
             default = path_in.parent, assertion = fy.PathAssertion.DIR_OUT
         )
         return path_in, folder_out

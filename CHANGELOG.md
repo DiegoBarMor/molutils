@@ -1,5 +1,10 @@
 # Changelog
 
+## [0.6.1] - 2025-10-18
+- Added `count particles` operation.
+- Updated `freyacli` dependency.
+
+
 ## [0.6.0] - 2025-10-18
 - `molutils` now uses the `molsimple` package to parse PDB files.
 - Added tests.

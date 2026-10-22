@@ -18,13 +18,13 @@ class List(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_list_chains(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(*mu.List.chains(ms.System.read_pdb(path_in), do_sort = True))
 
 
     # --------------------------------------------------------------------------
     def app_list_residues(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(*mu.List.residues(ms.System.read_pdb(path_in), do_sort = True))
 
 
