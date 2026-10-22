@@ -8,11 +8,12 @@ class Count(mu.AppSubcommand):
     def run(self):
         command = self.main.subcommands.pop(0)
 
-        if command == "models"  : return self.app_count_models()
-        if command == "chains"  : return self.app_count_chains()
-        if command == "residues": return self.app_count_residues()
-        if command == "frames"  : return self.app_count_frames()
-        if command == "altlocs" : return self.app_count_altlocs()
+        if command == "models"   : return self.app_count_models()
+        if command == "chains"   : return self.app_count_chains()
+        if command == "residues" : return self.app_count_residues()
+        if command == "particles": return self.app_count_particles()
+        if command == "frames"   : return self.app_count_frames()
+        if command == "altlocs"  : return self.app_count_altlocs()
 
         raise ValueError(f"Unknown command: {command}")
 
@@ -33,6 +34,12 @@ class Count(mu.AppSubcommand):
     def app_count_residues(self):
         path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.residues(ms.System.read_pdb(path_in)))
+
+
+    # --------------------------------------------------------------------------
+    def app_count_particles(self):
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        print(mu.Count.particles(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
@@ -71,6 +78,12 @@ class Count(mu.AppSubcommand):
     @classmethod
     def residues(cls, system: ms.System) -> int:
         return len(mu.List.residues(system, do_sort = False))
+
+
+    # --------------------------------------------------------------------------
+    @classmethod
+    def particles(cls, system: ms.System) -> int:
+        return len(system.particles)
 
 
     # --------------------------------------------------------------------------
