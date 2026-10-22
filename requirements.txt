@@ -1,2 +1,2 @@
 molsimple==0.1.2
-freyacli==0.4.5
+freyacli==0.5.0

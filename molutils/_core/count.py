@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import molsimple as ms
 import freyacli as fy
 import molutils as mu
@@ -21,28 +19,26 @@ class Count(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_count_models(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.models(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_chains(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.chains(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_residues(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.residues(ms.System.read_pdb(path_in)))
 
 
     # --------------------------------------------------------------------------
     def app_count_frames(self):
-        path_struct = self.main.get_arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
-        path_traj = self.main.get_arg_path("path_traj",
-            assertion = fy.PathAssertion.FILE_IN, allow_none = True
-        )
+        path_struct = self.main.arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
+        path_traj = self.main.arg_path("path_traj", assertion = fy.PathAssertion.FILE_IN)
 
         import MDAnalysis as mda
         args_traj = [str(path_traj)] if path_traj is not None else []
@@ -55,7 +51,7 @@ class Count(mu.AppSubcommand):
 
     # --------------------------------------------------------------------------
     def app_count_altlocs(self):
-        path_in = self.main.get_arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
+        path_in = self.main.arg_path("path_in", assertion = fy.PathAssertion.FILE_IN)
         print(mu.Count.altlocs(ms.System.read_pdb(path_in)))
 
 
