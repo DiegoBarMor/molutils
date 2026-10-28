@@ -1,5 +1,7 @@
 from ._version import __version__
 
+from ._utils.mda_utils import MDAUtils
+
 from ._ui.app_subcommand import AppSubcommand
 
 from ._core.list_ import List

@@ -39,13 +39,12 @@ class AppMain(fy.App):
         path_out = self.arg_path("path_out", assertion = fy.PathAssertion.FILE_OUT)
         paths_traj = self.arg_path_list("paths_traj", assertion = fy.PathAssertion.FILE_OUT)
 
-        import MDAnalysis as mda
-        mda.Universe(path_in).select_atoms(query).write(path_out)
+        mu.MDAUtils.create_universe_quiet(path_in).select_atoms(query).write(path_out)
 
         if not paths_traj: return
 
         path_traj_in, path_traj_out = paths_traj
-        u = mda.Universe(path_in, path_traj_in)
+        u = mu.MDAUtils.create_universe_quiet(path_in, path_traj_in)
         u.select_atoms(query).write(str(path_traj_out), frames = "all")
 
 

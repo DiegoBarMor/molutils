@@ -46,14 +46,10 @@ class Count(mu.AppSubcommand):
     def app_count_frames(self):
         path_struct = self.main.arg_path("path_struct", assertion = fy.PathAssertion.FILE_IN)
         path_traj = self.main.arg_path("path_traj", assertion = fy.PathAssertion.FILE_IN)
-
-        import MDAnalysis as mda
-        args_traj = [str(path_traj)] if path_traj is not None else []
-        u = mda.Universe(str(path_struct), *args_traj)
-
-        nframes_valid, _ = mu.Count.frames(u)
+        nframes_valid, _ = mu.Count.frames(
+            mu.MDAUtils.create_universe_quiet(path_struct, path_traj)
+        )
         print(f"{nframes_valid}")
-
 
 
     # --------------------------------------------------------------------------

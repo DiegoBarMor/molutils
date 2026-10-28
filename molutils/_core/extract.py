@@ -1,5 +1,4 @@
 from pathlib import Path
-from collections import defaultdict
 
 import molsimple as ms
 import freyacli as fy
@@ -70,10 +69,7 @@ class Extract(mu.AppSubcommand):
         frames: list[int] = None, unpack: bool = False
     ) -> None:
         """Note: This method directly saves the specified frames instead of returning them."""
-        import MDAnalysis as mda
-
-        args_traj = [str(path_traj)] if path_traj is not None else []
-        u = mda.Universe(str(path_struct), *args_traj)
+        u = mu.MDAUtils.create_universe_quiet(path_struct, path_traj)
 
         if frames is not None and len(frames) == 1:
             unpack = True
