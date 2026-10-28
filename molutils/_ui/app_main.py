@@ -27,6 +27,7 @@ class AppMain(fy.App):
         if command == "count"  : return mu.Count(self).run()
         if command == "extract": return mu.Extract(self).run()
         if command == "remove" : return mu.Remove(self).run()
+        if command == "traj"   : return mu.Traj(self).run()
         if command == "select" : return self._run_select()
         if command == "merge"  : return self._run_merge()
         raise ValueError(f"Unknown command: {command}")
