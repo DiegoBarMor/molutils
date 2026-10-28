@@ -11,6 +11,8 @@ class MDAUtils:
         import MDAnalysis as mda
         from contextlib import redirect_stdout, redirect_stderr
 
+        warnings.filterwarnings("ignore", module = "MDAnalysis")
+
         buf = io.StringIO()
         logger = logging.getLogger("MDAnalysis")
         old_level = logger.getEffectiveLevel()
