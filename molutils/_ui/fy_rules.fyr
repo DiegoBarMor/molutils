@@ -59,6 +59,22 @@
     !@
 !@
 
+@traj
+    @align
+        path_struct[]1.PATH
+        ~path_traj[]1.PATH
+        ~path_ref[r,ref]1.PATH
+        ~path_out[o,out]1.PATH
+        ~selection[s,sel]1.STR=all
+    !@
+    @rmsd
+        path_struct[]1.PATH
+        ~path_traj[]1.PATH
+        ~path_ref[r,ref]1.PATH
+        ~selection[s,sel]1.STR=all
+    !@
+!@
+
 @select
     query[]1.STR
     path_in[]1.PATH

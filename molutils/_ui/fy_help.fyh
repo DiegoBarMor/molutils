@@ -69,10 +69,9 @@
     @frames
         !fyh:_ Extract specific frames from a PDB file into separate file(s).
             Requires MDAnalysis.
-        !fyh:path_struct Path of the structure file (e.g. PDB file). Can be anything supported by MDanalysis.
-            If the file also contains the trajectory data (e.g. XYZ file), then "path_traj" can be ommitted.
+        !use:mda_struct
             In this case, an additional structure file (a copy of the first frame) may be exported for convenience.
-        !fyh:path_traj Path of the trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
+        !use:mda_traj
         !fyh:folder_out Path of the directory where to place the unpacked structure(s).
             If not provided, the parent directory of the input PDB file will be used.
         !fyh:frames Frame indices to extract. If no frames are specified, all frames are extracted.
@@ -84,11 +83,35 @@
 
 @remove
     !fyh:_ Remove undesired data from a PDB file.
+    @altlocs
+        !fyh:_ Keep only the atoms without altloc tags or the first instance encountered of an altloc (usually marked as 'A').
+        !fyh:path_in Path of a PDB file.
+        !fyh:path_out Path for the output PDB file.
+    !@
+!@
+
+@traj
+    !fyh:_ Common operations related to analysis of trajectories.
+    @align
+        !fyh:_ Align a trajectory according to its RMSD values against some reference structure. Requires MDAnalysis.
+        !use:mda_struct
+        !use:mda_traj
+        !fyh:path_ref Path of the reference file (e.g. PDB file). Can be anything supported by MDanalysis. If not provided, the first frame of the input trajectory is considered.
+        !fyh:path_out Path for the output algined trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
+        !fyh:selection Atom selection query for performing the RMSD. Must follow MDAnalysis format.
+    !@
+    @rmsd
+        !fyh:_ Calculate the RMSD values of a trajectory against some reference structure. Requires MDAnalysis.
+        !use:mda_struct
+        !use:mda_traj
+        !fyh:path_ref Path of the reference file (e.g. PDB file). Can be anything supported by MDanalysis. If not provided, the first frame of the input trajectory is considered.
+        !fyh:selection Atom selection query for performing the RMSD. Must follow MDAnalysis format.
+    !@
 !@
 
 @select
     !fyh:_ Select specific atoms with a custom query (MDAnalysis format) and save them into a file. Requires MDAnalysis.
-    !fyh:query Query for selecting the atoms of interest. Must follow MDAnalysis format
+    !fyh:query Query for selecting the atoms of interest. Must follow MDAnalysis format.
     !fyh:path_in Path of the structure file whose atoms will be selected. Can be anything supported by MDanalysis.
     !fyh:path_out Path for the output selected atoms. Can be anything supported by MDanalysis.
     !fyh:paths_traj Input and output paths for an optional trajectory.
@@ -106,4 +129,11 @@
     !fyh:path_in Path of a PDB file.
     !fyh:folder_out Path of the directory where to place the unpacked structure(s).
         If not provided, the parent directory of the input PDB file will be used.
+!fed
+!def mda_struct
+    !fyh:path_struct Path of the structure file (e.g. PDB file). Can be anything supported by MDanalysis.
+        If the file also contains the trajectory data (e.g. XYZ file), then "path_traj" can be ommitted.
+!fed
+!def mda_traj
+    !fyh:path_traj Path of the trajectory file (e.g. XTC file). Can be anything supported by MDanalysis.
 !fed

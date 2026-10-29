@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import molsimple as ms
 import freyacli as fy
 import molutils as mu
@@ -10,7 +8,7 @@ class List(mu.AppSubcommand):
     def run(self):
         command = self.main.subcommands.pop(0)
 
-        if command == "chains": return self.app_list_chains()
+        if command == "chains"  : return self.app_list_chains()
         if command == "residues": return self.app_list_residues()
 
         raise ValueError(f"Unknown command: {command}")

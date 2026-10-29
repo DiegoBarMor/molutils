@@ -12,3 +12,4 @@ bash tests/02_extract.sh
 bash tests/03_remove.sh
 bash tests/04_select.sh
 bash tests/05_merge.sh
+bash tests/06_traj.sh

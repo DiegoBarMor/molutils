@@ -10,7 +10,7 @@ class Remove(mu.AppSubcommand):
     def run(self):
         command = self.main.subcommands.pop(0)
 
-        if command == "altlocs" : return self.app_remove_altlocs()
+        if command == "altlocs": return self.app_remove_altlocs()
 
         raise ValueError(f"Unknown command: {command}")
 
